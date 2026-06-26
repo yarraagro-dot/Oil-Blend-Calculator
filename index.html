@@ -5,257 +5,375 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blend Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f8f9fb;
+  --card: #ffffff;
+  --ink: #0f0f14;
+  --ink-2: #4b4b5a;
+  --ink-3: #9898a8;
+  --border: #ebebf0;
+  --accent: #6c47ff;
+  --accent-2: #4f35c2;
+  --accent-bg: rgba(108,71,255,0.07);
+  --green: #00c47a;
+  --green-bg: rgba(0,196,122,0.1);
+  --red: #ff3d57;
+  --red-bg: rgba(255,61,87,0.1);
+  --sf-color: #f5a623;
+  --sb-color: #5aab4a;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+body {
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex; justify-content: center;
+  padding: 0 20px 80px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { width: 100%; max-width: 420px; padding-top: 44px; }
 
-  :root {
-    --bg:         #f2f2f7;
-    --card:       #ffffff;
-    --card-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
-    --text:       #1c1c1e;
-    --secondary:  #3c3c43;
-    --tertiary:   #8e8e93;
-    --separator:  rgba(60,60,67,0.12);
-    --blue:       #007aff;
-    --blue-light: rgba(0,122,255,0.1);
-    --green:      #34c759;
-    --red:        #ff3b30;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  }
+/* header */
+.header { margin-bottom: 20px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.header h1 { font-size: 20px; font-weight: 650; letter-spacing: -0.03em; color: var(--ink); }
+.header-badge { font-size: 11px; font-weight: 500; color: var(--accent); background: var(--accent-bg); padding: 3px 9px; border-radius: 20px; }
+.header p { font-size: 13px; color: var(--ink-3); margin-top: 3px; }
 
-  body {
-    background: var(--bg);
-    font-family: var(--font);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 0 16px 60px;
-    -webkit-font-smoothing: antialiased;
-  }
+/* hero */
+.hero {
+  background: linear-gradient(135deg, var(--accent) 0%, #3a1fa8 100%);
+  border-radius: 22px; padding: 22px 20px 18px;
+  margin-bottom: 10px; position: relative; overflow: hidden;
+}
+.hero.is-green { background: linear-gradient(135deg, #00b86e 0%, #007a4a 100%); }
+.hero.is-red   { background: linear-gradient(135deg, #ff3d57 0%, #b0001e 100%); }
+.hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 6px; }
+.hero-amount { display: flex; align-items: flex-end; gap: 5px; margin-bottom: 12px; }
+.hero-curr { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.6); padding-bottom: 7px; }
+.hero-num { font-size: 64px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.hero-bottom { display: flex; align-items: center; justify-content: space-between; }
+.hero-verdict { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 5px 12px 5px 8px; font-size: 12px; font-weight: 500; color: #fff; }
+.verdict-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+.hero-target { font-size: 11px; color: rgba(255,255,255,0.4); }
 
-  .page { width: 100%; max-width: 390px; padding-top: 56px; }
+/* card */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; margin-bottom: 10px; overflow: hidden; }
 
-  /* ── Page title ── */
-  .page-title {
-    font-size: 28px; font-weight: 700; letter-spacing: -0.02em;
-    color: var(--text); margin-bottom: 6px;
-  }
-  .page-sub {
-    font-size: 15px; color: var(--tertiary); margin-bottom: 28px;
-    font-weight: 400;
-  }
+/* bottle scene */
+.bottle-scene {
+  padding: 20px 16px 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+}
+.plant-side { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.plant-label { font-size: 11px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; }
+.plant-pct { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.plant-pct.sf { color: var(--sf-color); }
+.plant-pct.sb { color: var(--sb-color); }
 
-  /* ── Result card ── */
-  .result-card {
-    background: var(--card);
-    border-radius: 20px;
-    box-shadow: var(--card-shadow);
-    padding: 24px 22px 20px;
-    margin-bottom: 12px;
-    text-align: center;
-    transition: background 0.4s ease;
-  }
-  .result-card.is-green { background: var(--green); }
-  .result-card.is-red   { background: var(--red); }
+/* bottle SVG wrapper */
+.bottle-wrap { flex-shrink: 0; position: relative; }
 
-  .result-label {
-    font-size: 13px; font-weight: 500; letter-spacing: 0.01em;
-    color: var(--tertiary); margin-bottom: 4px;
-    transition: color 0.3s;
-  }
-  .result-card.is-green .result-label,
-  .result-card.is-red   .result-label { color: rgba(255,255,255,0.7); }
+/* input rows */
+.irow { display: flex; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.irow:last-child { border-bottom: none; }
+.irow:focus-within { background: #fafafe; }
+.irow-label { flex: 1; font-size: 15px; font-weight: 450; color: var(--ink); padding: 14px 0; }
+.irow-label small { display: block; font-size: 11px; color: var(--ink-3); font-weight: 400; margin-top: 1px; }
+.finp { background: transparent; border: none; outline: none; font-family: var(--font); font-size: 17px; font-weight: 600; color: var(--accent); text-align: right; width: 90px; padding: 14px 0; -webkit-appearance: none; appearance: none; font-variant-numeric: tabular-nums; }
+.finp::-webkit-inner-spin-button, .finp::-webkit-outer-spin-button { -webkit-appearance: none; }
+.finp[type=number] { -moz-appearance: textfield; }
+.irow-unit { font-size: 12px; font-weight: 500; color: var(--ink-3); margin-left: 4px; padding: 14px 0; min-width: 28px; }
 
-  .result-amount {
-    display: flex; align-items: baseline;
-    justify-content: center; gap: 5px; margin-bottom: 4px;
-  }
-  .result-curr {
-    font-size: 22px; font-weight: 400; color: var(--tertiary);
-    letter-spacing: -0.01em; transition: color 0.3s;
-  }
-  .result-card.is-green .result-curr,
-  .result-card.is-red   .result-curr { color: rgba(255,255,255,0.75); }
+/* ratio visual */
+.ratio-wrap { padding: 18px 18px 20px; }
+.ratio-bars { display: flex; gap: 3px; margin-bottom: 14px; }
+.ratio-bar { height: 6px; border-radius: 3px; transition: width 0.3s cubic-bezier(.4,0,.2,1); }
+.ratio-bar.sf { background: var(--accent); }
+.ratio-bar.sb { background: var(--border); flex: 1; }
+.ratio-labels { display: flex; justify-content: space-between; margin-bottom: 14px; }
+.rlabel-item { display: flex; flex-direction: column; gap: 1px; }
+.rlabel-item:last-child { text-align: right; }
+.rlabel-name { font-size: 11px; font-weight: 500; color: var(--ink-3); }
+.rlabel-pct { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
+.rlabel-item:first-child .rlabel-pct { color: var(--accent); }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 5px; background: var(--border); border-radius: 3px; outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--card); border: 2px solid var(--accent); box-shadow: 0 1px 6px rgba(108,71,255,0.25), 0 0 0 4px rgba(108,71,255,0.08); transition: box-shadow 0.2s, transform 0.15s; }
+input[type=range]:active::-webkit-slider-thumb { transform: scale(1.1); box-shadow: 0 1px 8px rgba(108,71,255,0.4), 0 0 0 6px rgba(108,71,255,0.12); }
+input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--card); border: 2px solid var(--accent); }
 
-  .result-num {
-    font-size: 64px; font-weight: 700; letter-spacing: -0.04em;
-    line-height: 1; color: var(--text); transition: color 0.3s;
-  }
-  .result-card.is-green .result-num,
-  .result-card.is-red   .result-num { color: #ffffff; }
+/* breakdown */
+.brow { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.brow:last-child { border-bottom: none; }
+.brow-k { color: var(--ink-2); font-weight: 400; }
+.brow-v { font-size: 14px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.brow.sum { background: #fafafa; }
+.brow.sum .brow-k { color: var(--ink); font-weight: 500; }
+.brow.sum .brow-v { font-size: 15px; }
 
-  .result-tag {
-    font-size: 13px; font-weight: 500; color: var(--tertiary);
-    margin-top: 6px; transition: color 0.3s;
-  }
-  .result-card.is-green .result-tag { color: rgba(255,255,255,0.8); }
-  .result-card.is-red   .result-tag { color: rgba(255,255,255,0.8); }
-
-  /* ── Section label ── */
-  .section-label {
-    font-size: 13px; font-weight: 600; color: var(--tertiary);
-    letter-spacing: -0.01em;
-    text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em;
-    padding: 0 6px; margin-bottom: 6px; margin-top: 22px;
-  }
-
-  /* ── Card ── */
-  .card {
-    background: var(--card);
-    border-radius: 20px;
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-
-  /* ── Row layout for inputs ── */
-  .input-row {
-    display: flex; align-items: center;
-    padding: 0 18px;
-    border-bottom: 1px solid var(--separator);
-  }
-  .input-row:last-child { border-bottom: none; }
-  .input-row-label {
-    font-size: 17px; font-weight: 400; color: var(--text);
-    flex: 1; padding: 13px 0;
-    white-space: nowrap;
-  }
-  .finp {
-    background: transparent; border: none; outline: none;
-    font-family: var(--font); font-size: 17px; font-weight: 500;
-    color: var(--blue); text-align: right;
-    width: 110px; padding: 13px 0;
-    -webkit-appearance: none; appearance: none;
-  }
-  .finp::-webkit-inner-spin-button,
-  .finp::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .finp[type=number] { -moz-appearance: textfield; }
-  .input-unit {
-    font-size: 17px; color: var(--tertiary); margin-left: 3px;
-    padding: 13px 0; font-weight: 400;
-  }
-
-  /* ── Slider row ── */
-  .slider-row { padding: 14px 18px 18px; }
-  .slider-heads {
-    display: flex; justify-content: space-between;
-    font-size: 12px; color: var(--tertiary); margin-bottom: 10px;
-    font-weight: 400;
-  }
-  .slider-pct {
-    font-size: 12px; font-weight: 600; color: var(--blue);
-  }
-
-  input[type=range] {
-    -webkit-appearance: none; appearance: none;
-    width: 100%; height: 4px;
-    background: var(--separator); border-radius: 2px;
-    outline: none; cursor: pointer;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 26px; height: 26px;
-    border-radius: 50%; background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.22), 0 0 0 0.5px rgba(0,0,0,0.06);
-    transition: transform 0.15s;
-  }
-  input[type=range]:active::-webkit-slider-thumb { transform: scale(1.12); }
-  input[type=range]::-moz-range-thumb {
-    width: 26px; height: 26px; border: none; border-radius: 50%;
-    background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-  }
-
-  /* ── Breakdown rows ── */
-  .brow {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 13px 18px;
-    border-bottom: 1px solid var(--separator);
-    font-size: 15px;
-  }
-  .brow:last-child { border-bottom: none; }
-  .brow-key { color: var(--text); font-weight: 400; }
-  .brow-val { color: var(--tertiary); font-weight: 500; font-variant-numeric: tabular-nums; }
-  .brow.total .brow-key { font-weight: 600; }
-  .brow.total .brow-val { color: var(--text); font-weight: 600; }
-
-  /* flash */
-  @keyframes numFlash { 0%,100%{opacity:1} 45%{opacity:0.2} }
-  .flash { animation: numFlash 0.22s ease; }
+@keyframes pop { 0%{transform:scale(1)} 40%{transform:scale(1.04)} 100%{transform:scale(1)} }
+.pop { animation: pop 0.2s ease; }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <div class="page-title">Blend Calculator</div>
-  <div class="page-sub">Sunflower &amp; Soybean oil</div>
-
-  <!-- Result -->
-  <div class="result-card" id="ticker">
-    <div class="result-label">Landed Cost</div>
-    <div class="result-amount">
-      <span class="result-curr">AUD</span>
-      <span class="result-num" id="out">—</span>
+  <div class="header">
+    <div class="header-top">
+      <h1>Blend Calculator</h1>
+      <span class="header-badge">Live</span>
     </div>
-    <div class="result-tag" id="rtag"></div>
+    <p>Sunflower &amp; Soybean · INR → AUD</p>
   </div>
 
-  <!-- Oil Prices -->
-  <div class="section-label">Oil Prices</div>
+  <!-- Hero -->
+  <div class="hero" id="hero">
+    <div class="hero-label">Landed cost</div>
+    <div class="hero-amount">
+      <span class="hero-curr">AUD</span>
+      <span class="hero-num" id="out">—</span>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-verdict"><span class="verdict-dot"></span><span id="rtag">Calculating…</span></div>
+      <span class="hero-target">Target &lt; 10.00</span>
+    </div>
+  </div>
+
+  <!-- Bottle scene -->
   <div class="card">
-    <div class="input-row">
-      <div class="input-row-label">Sunflower</div>
+    <div class="bottle-scene">
+
+      <!-- Sunflower side -->
+      <div class="plant-side">
+        <svg width="64" height="80" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- stem -->
+          <path d="M32 78 Q30 60 32 44" stroke="#5a8a2a" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- leaves -->
+          <path d="M32 65 Q20 58 18 50 Q26 54 32 62" fill="#72b03a" opacity="0.85"/>
+          <path d="M32 55 Q44 50 46 42 Q38 48 32 54" fill="#72b03a" opacity="0.75"/>
+          <!-- petals - outer ring -->
+          <ellipse cx="32" cy="22" rx="4.5" ry="9" fill="#f5a623" transform="rotate(0 32 22)"/>
+          <ellipse cx="32" cy="22" rx="4.5" ry="9" fill="#f5a623" transform="rotate(45 32 32) translate(0,-10)"/>
+          <ellipse cx="42" cy="32" rx="4.5" ry="9" fill="#f5a623" transform="rotate(90 32 32) translate(0,-10)"/>
+          <ellipse cx="32" cy="42" rx="4.5" ry="9" fill="#f5a623" transform="rotate(135 32 32) translate(0,-10)"/>
+          <ellipse cx="22" cy="32" rx="4.5" ry="9" fill="#f5a623" transform="rotate(180 32 32) translate(0,-10)"/>
+          <ellipse cx="32" cy="22" rx="4.5" ry="9" fill="#f5a623" transform="rotate(225 32 32) translate(0,-10)"/>
+          <ellipse cx="32" cy="22" rx="4.5" ry="9" fill="#f5a623" transform="rotate(270 32 32) translate(0,-10)"/>
+          <ellipse cx="32" cy="22" rx="4.5" ry="9" fill="#f5a623" transform="rotate(315 32 32) translate(0,-10)"/>
+          <!-- petals reworked as absolute -->
+          <ellipse cx="32" cy="20" rx="4" ry="8.5" fill="#f7b731"/>
+          <ellipse cx="44" cy="24" rx="4" ry="8.5" fill="#f7b731" transform="rotate(45 44 24)"/>
+          <ellipse cx="46" cy="32" rx="4" ry="8.5" fill="#f7b731" transform="rotate(90 46 32)"/>
+          <ellipse cx="44" cy="40" rx="4" ry="8.5" fill="#f7b731" transform="rotate(135 44 40)"/>
+          <ellipse cx="32" cy="44" rx="4" ry="8.5" fill="#f7b731" transform="rotate(180 32 44)"/>
+          <ellipse cx="20" cy="40" rx="4" ry="8.5" fill="#f7b731" transform="rotate(225 20 40)"/>
+          <ellipse cx="18" cy="32" rx="4" ry="8.5" fill="#f7b731" transform="rotate(270 18 32)"/>
+          <ellipse cx="20" cy="24" rx="4" ry="8.5" fill="#f7b731" transform="rotate(315 20 24)"/>
+          <!-- centre disc -->
+          <circle cx="32" cy="32" r="10" fill="#4a2e0a"/>
+          <circle cx="32" cy="32" r="7.5" fill="#6b3f0f"/>
+          <!-- seed pattern dots -->
+          <circle cx="32" cy="27" r="1.2" fill="#2a1505"/>
+          <circle cx="36" cy="29" r="1.2" fill="#2a1505"/>
+          <circle cx="37" cy="33" r="1.2" fill="#2a1505"/>
+          <circle cx="35" cy="37" r="1.2" fill="#2a1505"/>
+          <circle cx="32" cy="38" r="1.2" fill="#2a1505"/>
+          <circle cx="28" cy="37" r="1.2" fill="#2a1505"/>
+          <circle cx="27" cy="33" r="1.2" fill="#2a1505"/>
+          <circle cx="28" cy="29" r="1.2" fill="#2a1505"/>
+          <circle cx="32" cy="32" r="1.2" fill="#2a1505"/>
+        </svg>
+        <div class="plant-label">Sunflower</div>
+        <div class="plant-pct sf" id="sf-pct-disp">70%</div>
+      </div>
+
+      <!-- Bottle SVG -->
+      <div class="bottle-wrap">
+        <svg id="bottle-svg" width="80" height="160" viewBox="0 0 80 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="bottle-clip">
+              <!-- bottle body shape for clipping oil fill -->
+              <path d="M28 42 C18 48 12 60 12 74 L12 136 C12 143 17 148 24 148 L56 148 C63 148 68 143 68 136 L68 74 C68 60 62 48 52 42 Z"/>
+            </clipPath>
+            <linearGradient id="sf-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#f7c94a"/>
+              <stop offset="100%" stop-color="#f5a623"/>
+            </linearGradient>
+            <linearGradient id="sb-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#74c455"/>
+              <stop offset="100%" stop-color="#4a9a35"/>
+            </linearGradient>
+            <linearGradient id="bottle-shine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+              <stop offset="40%" stop-color="rgba(255,255,255,0.06)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- cap -->
+          <rect x="30" y="14" width="20" height="8" rx="3" fill="#d0d0d0"/>
+          <rect x="28" y="20" width="24" height="6" rx="2" fill="#b8b8b8"/>
+
+          <!-- neck -->
+          <path d="M30 26 L28 42 L52 42 L50 26 Z" fill="#e8e8ec" stroke="#d0d0d2" stroke-width="0.5"/>
+
+          <!-- bottle body outline -->
+          <path d="M28 42 C18 48 12 60 12 74 L12 136 C12 143 17 148 24 148 L56 148 C63 148 68 143 68 136 L68 74 C68 60 62 48 52 42 Z" fill="#f0f0f5" stroke="#d8d8e0" stroke-width="1"/>
+
+          <!-- oil fill: soybean (bottom layer) -->
+          <rect id="sb-fill" x="12" y="100" width="56" height="48" clip-path="url(#bottle-clip)" fill="url(#sb-grad)" opacity="0.88"/>
+
+          <!-- oil fill: sunflower (top layer, above soybean) -->
+          <rect id="sf-fill" x="12" y="74" width="56" height="26" clip-path="url(#bottle-clip)" fill="url(#sf-grad)" opacity="0.90"/>
+
+          <!-- dividing line between oils -->
+          <line id="oil-divide" x1="13" y1="100" x2="67" y2="100" stroke="rgba(255,255,255,0.6)" stroke-width="1" stroke-dasharray="3 2"/>
+
+          <!-- shine overlay -->
+          <path d="M28 42 C18 48 12 60 12 74 L12 136 C12 143 17 148 24 148 L56 148 C63 148 68 143 68 136 L68 74 C68 60 62 48 52 42 Z" fill="url(#bottle-shine)"/>
+
+          <!-- bottle label band -->
+          <rect x="14" y="88" width="52" height="32" rx="2" fill="rgba(255,255,255,0.55)" stroke="rgba(200,200,210,0.5)" stroke-width="0.5"/>
+          <text x="40" y="101" text-anchor="middle" font-size="7.5" font-weight="700" fill="#333" font-family="system-ui" letter-spacing="0.5">BLEND</text>
+          <text x="40" y="112" text-anchor="middle" font-size="6" fill="#666" font-family="system-ui">5 Ltr</text>
+
+          <!-- volume markers -->
+          <line x1="13" y1="80" x2="17" y2="80" stroke="#bbb" stroke-width="0.8"/>
+          <line x1="13" y1="96" x2="17" y2="96" stroke="#bbb" stroke-width="0.8"/>
+          <line x1="13" y1="112" x2="17" y2="112" stroke="#bbb" stroke-width="0.8"/>
+          <line x1="13" y1="128" x2="17" y2="128" stroke="#bbb" stroke-width="0.8"/>
+        </svg>
+      </div>
+
+      <!-- Soybean side -->
+      <div class="plant-side">
+        <svg width="64" height="80" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- stem -->
+          <path d="M32 78 Q34 62 32 46" stroke="#4a7a22" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- trifoliate leaves - classic soybean shape -->
+          <!-- left leaf -->
+          <ellipse cx="20" cy="54" rx="11" ry="7" fill="#5ab040" transform="rotate(-25 20 54)"/>
+          <path d="M20 54 Q26 50 32 52" stroke="#3d8a2a" stroke-width="1" fill="none"/>
+          <!-- right leaf -->
+          <ellipse cx="44" cy="54" rx="11" ry="7" fill="#5ab040" transform="rotate(25 44 54)"/>
+          <path d="M44 54 Q38 50 32 52" stroke="#3d8a2a" stroke-width="1" fill="none"/>
+          <!-- top leaf -->
+          <ellipse cx="32" cy="44" rx="10" ry="7" fill="#68be4a"/>
+          <path d="M32 50 L32 44" stroke="#3d8a2a" stroke-width="1"/>
+          <!-- soybean pods - the key identifier -->
+          <path d="M24 36 Q22 28 25 22 Q28 16 32 15 Q36 16 38 22 Q40 28 38 36 Q36 40 32 41 Q28 40 24 36Z" fill="#8ab840" stroke="#6a9830" stroke-width="0.8"/>
+          <path d="M32 15 L32 41" stroke="#5a8820" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <!-- bean bumps on pod -->
+          <ellipse cx="32" cy="21" rx="4.5" ry="3.5" fill="#a0cc55" stroke="#7aaa35" stroke-width="0.6"/>
+          <ellipse cx="32" cy="28" rx="4.5" ry="3.5" fill="#a0cc55" stroke="#7aaa35" stroke-width="0.6"/>
+          <ellipse cx="32" cy="35" rx="4.5" ry="3.5" fill="#a0cc55" stroke="#7aaa35" stroke-width="0.6"/>
+          <!-- second pod -->
+          <path d="M38 34 Q40 26 43 22 Q46 18 49 19 Q52 21 52 27 Q51 33 48 36 Q45 39 42 38 Q39 37 38 34Z" fill="#8ab840" stroke="#6a9830" stroke-width="0.7"/>
+          <ellipse cx="46" cy="24" rx="3.5" ry="2.8" fill="#a0cc55" stroke="#7aaa35" stroke-width="0.5"/>
+          <ellipse cx="46" cy="30" rx="3.5" ry="2.8" fill="#a0cc55" stroke="#7aaa35" stroke-width="0.5"/>
+        </svg>
+        <div class="plant-label">Soybean</div>
+        <div class="plant-pct sb" id="sb-pct-disp">30%</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Oil prices -->
+  <div class="card">
+    <div class="irow">
+      <div class="irow-label">Sunflower oil<small>Price per unit</small></div>
       <input class="finp" id="sf" type="number" inputmode="decimal" value="150" min="0" oninput="recalc()">
-      <span class="input-unit">INR</span>
+      <span class="irow-unit">INR</span>
     </div>
-    <div class="input-row">
-      <div class="input-row-label">Soybean</div>
+    <div class="irow">
+      <div class="irow-label">Soybean oil<small>Price per unit</small></div>
       <input class="finp" id="sb" type="number" inputmode="decimal" value="85" min="0" oninput="recalc()">
-      <span class="input-unit">INR</span>
+      <span class="irow-unit">INR</span>
     </div>
   </div>
 
-  <!-- Blend Ratio -->
-  <div class="section-label">Blend Ratio</div>
+  <!-- Blend ratio -->
   <div class="card">
-    <div class="input-row">
-      <div class="input-row-label">Sunflower</div>
-      <input class="finp" id="sfp" type="number" inputmode="numeric" value="70" min="0" max="100" oninput="syncFrom('sf')">
-      <span class="input-unit">%</span>
-    </div>
-    <div class="input-row">
-      <div class="input-row-label">Soybean</div>
-      <input class="finp" id="sbp" type="number" inputmode="numeric" value="30" min="0" max="100" oninput="syncFrom('sb')">
-      <span class="input-unit">%</span>
-    </div>
-    <div class="slider-row">
-      <div class="slider-heads">
-        <span>Soybean <span class="slider-pct" id="sb-pct">30%</span></span>
-        <span>Sunflower <span class="slider-pct" id="sf-pct">70%</span></span>
+    <div class="ratio-wrap">
+      <div class="ratio-labels">
+        <div class="rlabel-item">
+          <span class="rlabel-name">Sunflower</span>
+          <span class="rlabel-pct" id="sf-pct">70%</span>
+        </div>
+        <div class="rlabel-item">
+          <span class="rlabel-name">Soybean</span>
+          <span class="rlabel-pct" id="sb-pct">30%</span>
+        </div>
+      </div>
+      <div class="ratio-bars">
+        <div class="ratio-bar sf" id="sf-bar" style="width:70%"></div>
+        <div class="ratio-bar sb"></div>
       </div>
       <input type="range" id="sldr" min="0" max="100" value="70" step="1" oninput="syncFromSlider()">
+    </div>
+    <div style="border-top:1px solid var(--border)">
+      <div class="irow">
+        <div class="irow-label">Sunflower</div>
+        <input class="finp" id="sfp" type="number" inputmode="numeric" value="70" min="0" max="100" oninput="syncFrom('sf')">
+        <span class="irow-unit">%</span>
+      </div>
+      <div class="irow">
+        <div class="irow-label">Soybean</div>
+        <input class="finp" id="sbp" type="number" inputmode="numeric" value="30" min="0" max="100" oninput="syncFrom('sb')">
+        <span class="irow-unit">%</span>
+      </div>
     </div>
   </div>
 
   <!-- Breakdown -->
-  <div class="section-label">Breakdown</div>
   <div class="card">
-    <div class="brow">
-      <span class="brow-key">Sunflower ×5</span>
-      <span class="brow-val" id="b1">—</span>
-    </div>
-    <div class="brow">
-      <span class="brow-key">Soybean ×5</span>
-      <span class="brow-val" id="b2">—</span>
-    </div>
-    <div class="brow total">
-      <span class="brow-key">Combined</span>
-      <span class="brow-val" id="b3">—</span>
-    </div>
+    <div class="brow"><span class="brow-k">Sunflower weighted ×5</span><span class="brow-v" id="b1">—</span></div>
+    <div class="brow"><span class="brow-k">Soybean weighted ×5</span><span class="brow-v" id="b2">—</span></div>
+    <div class="brow sum"><span class="brow-k">Combined (INR)</span><span class="brow-v" id="b3">—</span></div>
   </div>
 
 </div>
+
 <script>
+// Bottle fill area: top of fill zone = y:74, bottom = y:148, total height = 74px
+var FILL_TOP = 74, FILL_BOTTOM = 148, FILL_H = FILL_BOTTOM - FILL_TOP; // 74px total
+
+function updateBottle(sfPct) {
+  var sbPct = 100 - sfPct;
+  // Heights proportional to percentage of the fill zone
+  var sfH = (sfPct / 100) * FILL_H;
+  var sbH = (sbPct / 100) * FILL_H;
+  var sfY = FILL_BOTTOM - FILL_H; // top of entire fill
+  var sbY = FILL_BOTTOM - sbH;
+
+  var sfFill = document.getElementById('sf-fill');
+  var sbFill = document.getElementById('sb-fill');
+  var divLine = document.getElementById('oil-divide');
+
+  // sunflower sits on top, soybean on bottom
+  sfFill.setAttribute('y', sfY);
+  sfFill.setAttribute('height', sfH);
+  sbFill.setAttribute('y', sbY);
+  sbFill.setAttribute('height', sbH);
+
+  // dividing line at boundary
+  var divideY = sbY;
+  divLine.setAttribute('y1', divideY);
+  divLine.setAttribute('y2', divideY);
+  // hide line if either is 0
+  divLine.style.display = (sfPct > 0 && sbPct > 0) ? 'block' : 'none';
+
+  // update side pct displays
+  document.getElementById('sf-pct-disp').textContent = sfPct + '%';
+  document.getElementById('sb-pct-disp').textContent = sbPct + '%';
+}
+
 function recalc() {
   var sfv  = parseFloat(document.getElementById('sf').value)  || 0;
   var sbv  = parseFloat(document.getElementById('sb').value)  || 0;
@@ -267,49 +385,50 @@ function recalc() {
   var val  = ((sum * 5) / 66) * 1.25;
 
   var outEl = document.getElementById('out');
-  outEl.classList.remove('flash');
+  outEl.classList.remove('pop');
   void outEl.offsetWidth;
-  outEl.classList.add('flash');
+  outEl.classList.add('pop');
   outEl.textContent = val.toFixed(2);
 
   document.getElementById('b1').textContent = (w1 * 5).toFixed(2);
   document.getElementById('b2').textContent = (w2 * 5).toFixed(2);
   document.getElementById('b3').textContent = (sum * 5).toFixed(2);
 
-  var ticker = document.getElementById('ticker');
-  var tag    = document.getElementById('rtag');
-  var above  = val > 10;
-  ticker.className = 'result-card ' + (above ? 'is-red' : 'is-green');
-  tag.textContent  = above ? 'Above target price' : 'Below target price';
+  var hero = document.getElementById('hero');
+  var tag  = document.getElementById('rtag');
+  var above = val > 10;
+  hero.className = 'hero ' + (above ? 'is-red' : 'is-green');
+  tag.textContent = above ? 'Above target price' : 'Below target price';
+
+  updateBottle(Math.round(sfpv));
 }
 
 function syncFrom(changed) {
-  var sfp  = document.getElementById('sfp');
-  var sbp  = document.getElementById('sbp');
+  var sfp = document.getElementById('sfp');
+  var sbp = document.getElementById('sbp');
   var sldr = document.getElementById('sldr');
   if (changed === 'sf') {
     var v = parseFloat(sfp.value);
-    if (!isNaN(v)) { v = Math.min(100, Math.max(0, Math.round(v))); sbp.value = 100-v; sldr.value = v; }
+    if (!isNaN(v)) { v = Math.min(100,Math.max(0,Math.round(v))); sbp.value=100-v; sldr.value=v; }
   } else {
     var v = parseFloat(sbp.value);
-    if (!isNaN(v)) { v = Math.min(100, Math.max(0, Math.round(v))); sfp.value = 100-v; sldr.value = 100-v; }
+    if (!isNaN(v)) { v = Math.min(100,Math.max(0,Math.round(v))); sfp.value=100-v; sldr.value=100-v; }
   }
-  updatePct();
-  recalc();
+  updateRatio(); recalc();
 }
 
 function syncFromSlider() {
   var v = parseInt(document.getElementById('sldr').value);
   document.getElementById('sfp').value = v;
-  document.getElementById('sbp').value = 100-v;
-  updatePct();
-  recalc();
+  document.getElementById('sbp').value = 100 - v;
+  updateRatio(); recalc();
 }
 
-function updatePct() {
+function updateRatio() {
   var v = parseInt(document.getElementById('sldr').value);
   document.getElementById('sf-pct').textContent = v + '%';
   document.getElementById('sb-pct').textContent = (100-v) + '%';
+  document.getElementById('sf-bar').style.width = v + '%';
 }
 
 recalc();
