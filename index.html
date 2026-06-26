@@ -1,155 +1,318 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blend Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-.wrap { padding: 1rem 0 2rem; max-width: 500px; }
-.title { font-size: 17px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
-.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
-.card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
-.sec { font-size: 10px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.flabel { font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; }
-.finp {
-  width: 100%; font-size: 22px; font-weight: 500; color: var(--text-primary);
-  background: var(--surface-1); border: 1px solid var(--border);
-  border-radius: 8px; padding: 11px 10px; outline: none;
-  font-family: var(--font-sans); -webkit-appearance: none; appearance: none;
-}
-.pwrap { position: relative; }
-.pwrap .finp { padding-right: 26px; }
-.psym { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-muted); pointer-events: none; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.slider-wrap { margin-top: 14px; padding-top: 12px; border-top: 0.5px solid var(--border); }
-.slider-heads { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
-input[type=range] {
-  -webkit-appearance: none; appearance: none;
-  width: 100%; height: 4px; background: var(--border-strong);
-  border-radius: 2px; outline: none; cursor: pointer;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
-  background: var(--text-primary); border: 3px solid var(--surface-2);
-  box-shadow: 0 0 0 1.5px var(--border-strong);
-}
-input[type=range]::-moz-range-thumb {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--text-primary); border: 3px solid var(--surface-2);
-}
+  :root {
+    --bg:         #f2f2f7;
+    --card:       #ffffff;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+    --text:       #1c1c1e;
+    --secondary:  #3c3c43;
+    --tertiary:   #8e8e93;
+    --separator:  rgba(60,60,67,0.12);
+    --blue:       #007aff;
+    --blue-light: rgba(0,122,255,0.1);
+    --green:      #34c759;
+    --red:        #ff3b30;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  }
 
-.result { border-radius: 12px; padding: 18px 16px; margin-bottom: 10px; background: var(--surface-1); }
-.rlabel { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-.rval { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1; color: var(--text-primary); }
-.rcurr { font-size: 18px; color: var(--text-muted); margin-right: 3px; }
-.rtag { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px; }
-.result.green { background: #1a7a3a; }
-.result.green .rlabel, .result.green .rtag { color: rgba(255,255,255,0.55); }
-.result.green .rval { color: #fff; }
-.result.green .rcurr { color: rgba(255,255,255,0.5); }
-.result.red { background: #b02020; }
-.result.red .rlabel, .result.red .rtag { color: rgba(255,255,255,0.55); }
-.result.red .rval { color: #fff; }
-.result.red .rcurr { color: rgba(255,255,255,0.5); }
+  body {
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
 
-.brow { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; }
-.brow:last-child { border-bottom: none; }
-.brow span:first-child { color: var(--text-secondary); }
-.brow span:last-child { font-weight: 500; color: var(--text-primary); }
+  .page { width: 100%; max-width: 390px; padding-top: 56px; }
+
+  /* ── Page title ── */
+  .page-title {
+    font-size: 28px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 15px; color: var(--tertiary); margin-bottom: 28px;
+    font-weight: 400;
+  }
+
+  /* ── Result card ── */
+  .result-card {
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    padding: 24px 22px 20px;
+    margin-bottom: 12px;
+    text-align: center;
+    transition: background 0.4s ease;
+  }
+  .result-card.is-green { background: var(--green); }
+  .result-card.is-red   { background: var(--red); }
+
+  .result-label {
+    font-size: 13px; font-weight: 500; letter-spacing: 0.01em;
+    color: var(--tertiary); margin-bottom: 4px;
+    transition: color 0.3s;
+  }
+  .result-card.is-green .result-label,
+  .result-card.is-red   .result-label { color: rgba(255,255,255,0.7); }
+
+  .result-amount {
+    display: flex; align-items: baseline;
+    justify-content: center; gap: 5px; margin-bottom: 4px;
+  }
+  .result-curr {
+    font-size: 22px; font-weight: 400; color: var(--tertiary);
+    letter-spacing: -0.01em; transition: color 0.3s;
+  }
+  .result-card.is-green .result-curr,
+  .result-card.is-red   .result-curr { color: rgba(255,255,255,0.75); }
+
+  .result-num {
+    font-size: 64px; font-weight: 700; letter-spacing: -0.04em;
+    line-height: 1; color: var(--text); transition: color 0.3s;
+  }
+  .result-card.is-green .result-num,
+  .result-card.is-red   .result-num { color: #ffffff; }
+
+  .result-tag {
+    font-size: 13px; font-weight: 500; color: var(--tertiary);
+    margin-top: 6px; transition: color 0.3s;
+  }
+  .result-card.is-green .result-tag { color: rgba(255,255,255,0.8); }
+  .result-card.is-red   .result-tag { color: rgba(255,255,255,0.8); }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 13px; font-weight: 600; color: var(--tertiary);
+    letter-spacing: -0.01em;
+    text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em;
+    padding: 0 6px; margin-bottom: 6px; margin-top: 22px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  /* ── Row layout for inputs ── */
+  .input-row {
+    display: flex; align-items: center;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--separator);
+  }
+  .input-row:last-child { border-bottom: none; }
+  .input-row-label {
+    font-size: 17px; font-weight: 400; color: var(--text);
+    flex: 1; padding: 13px 0;
+    white-space: nowrap;
+  }
+  .finp {
+    background: transparent; border: none; outline: none;
+    font-family: var(--font); font-size: 17px; font-weight: 500;
+    color: var(--blue); text-align: right;
+    width: 110px; padding: 13px 0;
+    -webkit-appearance: none; appearance: none;
+  }
+  .finp::-webkit-inner-spin-button,
+  .finp::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .finp[type=number] { -moz-appearance: textfield; }
+  .input-unit {
+    font-size: 17px; color: var(--tertiary); margin-left: 3px;
+    padding: 13px 0; font-weight: 400;
+  }
+
+  /* ── Slider row ── */
+  .slider-row { padding: 14px 18px 18px; }
+  .slider-heads {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--tertiary); margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .slider-pct {
+    font-size: 12px; font-weight: 600; color: var(--blue);
+  }
+
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 4px;
+    background: var(--separator); border-radius: 2px;
+    outline: none; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 26px; height: 26px;
+    border-radius: 50%; background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.22), 0 0 0 0.5px rgba(0,0,0,0.06);
+    transition: transform 0.15s;
+  }
+  input[type=range]:active::-webkit-slider-thumb { transform: scale(1.12); }
+  input[type=range]::-moz-range-thumb {
+    width: 26px; height: 26px; border: none; border-radius: 50%;
+    background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+  }
+
+  /* ── Breakdown rows ── */
+  .brow {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--separator);
+    font-size: 15px;
+  }
+  .brow:last-child { border-bottom: none; }
+  .brow-key { color: var(--text); font-weight: 400; }
+  .brow-val { color: var(--tertiary); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .brow.total .brow-key { font-weight: 600; }
+  .brow.total .brow-val { color: var(--text); font-weight: 600; }
+
+  /* flash */
+  @keyframes numFlash { 0%,100%{opacity:1} 45%{opacity:0.2} }
+  .flash { animation: numFlash 0.22s ease; }
 </style>
+</head>
+<body>
+<div class="page">
 
-<div class="wrap">
-  <div class="title">Blend price calculator</div>
-  <div class="sub">Sunflower &amp; Soybean oil blend</div>
+  <div class="page-title">Blend Calculator</div>
+  <div class="page-sub">Sunflower &amp; Soybean oil</div>
 
+  <!-- Result -->
+  <div class="result-card" id="ticker">
+    <div class="result-label">Landed Cost</div>
+    <div class="result-amount">
+      <span class="result-curr">AUD</span>
+      <span class="result-num" id="out">—</span>
+    </div>
+    <div class="result-tag" id="rtag"></div>
+  </div>
+
+  <!-- Oil Prices -->
+  <div class="section-label">Oil Prices</div>
   <div class="card">
-    <div class="sec">Oil prices</div>
-    <div class="grid2">
-      <div>
-        <div class="flabel">Sunflower</div>
-        <input class="finp" id="sf" type="number" inputmode="decimal" value="150" min="0" oninput="recalc()">
-      </div>
-      <div>
-        <div class="flabel">Soybean</div>
-        <input class="finp" id="sb" type="number" inputmode="decimal" value="85" min="0" oninput="recalc()">
-      </div>
+    <div class="input-row">
+      <div class="input-row-label">Sunflower</div>
+      <input class="finp" id="sf" type="number" inputmode="decimal" value="150" min="0" oninput="recalc()">
+      <span class="input-unit">INR</span>
+    </div>
+    <div class="input-row">
+      <div class="input-row-label">Soybean</div>
+      <input class="finp" id="sb" type="number" inputmode="decimal" value="85" min="0" oninput="recalc()">
+      <span class="input-unit">INR</span>
     </div>
   </div>
 
+  <!-- Blend Ratio -->
+  <div class="section-label">Blend Ratio</div>
   <div class="card">
-    <div class="sec">Blend proportions</div>
-    <div class="grid2">
-      <div>
-        <div class="flabel">Sunflower %</div>
-        <div class="pwrap">
-          <input class="finp" id="sfp" type="number" inputmode="numeric" value="70" min="0" max="100" oninput="syncFrom('sf')">
-          <span class="psym">%</span>
-        </div>
-      </div>
-      <div>
-        <div class="flabel">Soybean %</div>
-        <div class="pwrap">
-          <input class="finp" id="sbp" type="number" inputmode="numeric" value="30" min="0" max="100" oninput="syncFrom('sb')">
-          <span class="psym">%</span>
-        </div>
-      </div>
+    <div class="input-row">
+      <div class="input-row-label">Sunflower</div>
+      <input class="finp" id="sfp" type="number" inputmode="numeric" value="70" min="0" max="100" oninput="syncFrom('sf')">
+      <span class="input-unit">%</span>
     </div>
-    <div class="slider-wrap">
-      <div class="slider-heads"><span>← Soybean</span><span>Sunflower →</span></div>
+    <div class="input-row">
+      <div class="input-row-label">Soybean</div>
+      <input class="finp" id="sbp" type="number" inputmode="numeric" value="30" min="0" max="100" oninput="syncFrom('sb')">
+      <span class="input-unit">%</span>
+    </div>
+    <div class="slider-row">
+      <div class="slider-heads">
+        <span>Soybean <span class="slider-pct" id="sb-pct">30%</span></span>
+        <span>Sunflower <span class="slider-pct" id="sf-pct">70%</span></span>
+      </div>
       <input type="range" id="sldr" min="0" max="100" value="70" step="1" oninput="syncFromSlider()">
     </div>
   </div>
 
-  <div class="result" id="result">
-    <div class="rlabel">Landed cost</div>
-    <div class="rval"><span class="rcurr">AUD </span><span id="out">—</span></div>
-    <div class="rtag" id="rtag"></div>
-  </div>
-
+  <!-- Breakdown -->
+  <div class="section-label">Breakdown</div>
   <div class="card">
-    <div class="sec">Breakdown (INR)</div>
-    <div class="brow"><span>Sunflower weighted ×5</span><span id="b1">—</span></div>
-    <div class="brow"><span>Soybean weighted ×5</span><span id="b2">—</span></div>
-    <div class="brow"><span>Combined</span><span id="b3">—</span></div>
+    <div class="brow">
+      <span class="brow-key">Sunflower ×5</span>
+      <span class="brow-val" id="b1">—</span>
+    </div>
+    <div class="brow">
+      <span class="brow-key">Soybean ×5</span>
+      <span class="brow-val" id="b2">—</span>
+    </div>
+    <div class="brow total">
+      <span class="brow-key">Combined</span>
+      <span class="brow-val" id="b3">—</span>
+    </div>
   </div>
-</div>
 
+</div>
 <script>
 function recalc() {
   var sfv  = parseFloat(document.getElementById('sf').value)  || 0;
   var sbv  = parseFloat(document.getElementById('sb').value)  || 0;
   var sfpv = parseFloat(document.getElementById('sfp').value) || 0;
   var sbpv = parseFloat(document.getElementById('sbp').value) || 0;
-  var w1  = sfv * (sfpv / 100);
-  var w2  = sbv * (sbpv / 100);
-  var sum = w1 + w2;
-  var val = ((sum * 5) / 66) * 1.25;
-  document.getElementById('out').innerHTML = val.toFixed(2);
-  document.getElementById('b1').innerHTML  = (w1 * 5).toFixed(2);
-  document.getElementById('b2').innerHTML  = (w2 * 5).toFixed(2);
-  document.getElementById('b3').innerHTML  = (sum * 5).toFixed(2);
-  var rc  = document.getElementById('result');
-  var tag = document.getElementById('rtag');
-  rc.className = 'result ' + (val > 10 ? 'red' : 'green');
-  tag.innerHTML = val > 10 ? 'Above target price' : 'Below target price';
+  var w1   = sfv * (sfpv / 100);
+  var w2   = sbv * (sbpv / 100);
+  var sum  = w1 + w2;
+  var val  = ((sum * 5) / 66) * 1.25;
+
+  var outEl = document.getElementById('out');
+  outEl.classList.remove('flash');
+  void outEl.offsetWidth;
+  outEl.classList.add('flash');
+  outEl.textContent = val.toFixed(2);
+
+  document.getElementById('b1').textContent = (w1 * 5).toFixed(2);
+  document.getElementById('b2').textContent = (w2 * 5).toFixed(2);
+  document.getElementById('b3').textContent = (sum * 5).toFixed(2);
+
+  var ticker = document.getElementById('ticker');
+  var tag    = document.getElementById('rtag');
+  var above  = val > 10;
+  ticker.className = 'result-card ' + (above ? 'is-red' : 'is-green');
+  tag.textContent  = above ? 'Above target price' : 'Below target price';
 }
 
 function syncFrom(changed) {
-  var sfp = document.getElementById('sfp');
-  var sbp = document.getElementById('sbp');
+  var sfp  = document.getElementById('sfp');
+  var sbp  = document.getElementById('sbp');
   var sldr = document.getElementById('sldr');
   if (changed === 'sf') {
     var v = parseFloat(sfp.value);
-    if (!isNaN(v)) { v = Math.min(100, Math.max(0, Math.round(v))); sbp.value = 100 - v; sldr.value = v; }
+    if (!isNaN(v)) { v = Math.min(100, Math.max(0, Math.round(v))); sbp.value = 100-v; sldr.value = v; }
   } else {
     var v = parseFloat(sbp.value);
-    if (!isNaN(v)) { v = Math.min(100, Math.max(0, Math.round(v))); sfp.value = 100 - v; sldr.value = 100 - v; }
+    if (!isNaN(v)) { v = Math.min(100, Math.max(0, Math.round(v))); sfp.value = 100-v; sldr.value = 100-v; }
   }
+  updatePct();
   recalc();
 }
 
 function syncFromSlider() {
   var v = parseInt(document.getElementById('sldr').value);
   document.getElementById('sfp').value = v;
-  document.getElementById('sbp').value = 100 - v;
+  document.getElementById('sbp').value = 100-v;
+  updatePct();
   recalc();
+}
+
+function updatePct() {
+  var v = parseInt(document.getElementById('sldr').value);
+  document.getElementById('sf-pct').textContent = v + '%';
+  document.getElementById('sb-pct').textContent = (100-v) + '%';
 }
 
 recalc();
 </script>
+</body>
+</html>
